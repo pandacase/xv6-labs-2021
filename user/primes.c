@@ -15,7 +15,7 @@ sieve(int pipe_left[2])
     // read the first number : is prime
     read(pipe_left[0], &prime_num, sizeof prime_num);
     if (prime_num == -1) {
-        exit(0);
+        return;
     }
     printf("prime %d\n", prime_num);
 
@@ -40,7 +40,7 @@ sieve(int pipe_left[2])
         close(pipe_right[1]);   // complete write to right
         wait(0);
     }
-    exit(0);
+    return;
 }
 
 int
