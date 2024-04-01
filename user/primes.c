@@ -46,34 +46,34 @@ sieve(int pipe_left[2])
 int
 main(void)
 {
-    int pid;
-    int pipe_main[2];
-    int sentry = -1;        // sentry to indicate the last int
+  int pid;
+  int pipe_main[2];
+  int sentry = -1;        // sentry to indicate the last int
 
-    pipe(pipe_main);
+  pipe(pipe_main);
 
-    pid = fork();
-    if (pid < 0) {
-        fprintf(2, "primes: fork failed\n");
-        exit(1);
-    }
-    if (pid == 0) {
-        // the first child process
-        close(pipe_main[1]);    // no need write to left
-        sieve(pipe_main);
-    } else {
-        // the main(root) process
-        close(pipe_main[0]);    // no need read from right
+  pid = fork();
+  if (pid < 0) {
+    fprintf(2, "primes: fork failed\n");
+    exit(1);
+  }
+  if (pid == 0) {
+    // the first child process
+    close(pipe_main[1]);    // no need write to left
+    sieve(pipe_main);
+  } else {
+    // the main(root) process
+    close(pipe_main[0]);    // no need read from right
 
-        for (int i = 2; i <= 35; ++i) {
-            write(pipe_main[1], &i, sizeof i);
-        }
-
-        write(pipe_main[1], &sentry, sizeof sentry);
-
-        close(pipe_main[1]);    // complete write to right
-        wait(0);
+    for (int i = 2; i <= 35; ++i) {
+      write(pipe_main[1], &i, sizeof i);
     }
 
-    exit(0);
+    write(pipe_main[1], &sentry, sizeof sentry);
+
+    close(pipe_main[1]);    // complete write to right
+    wait(0);
+  }
+
+  exit(0);
 }
