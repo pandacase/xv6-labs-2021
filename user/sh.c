@@ -144,6 +144,7 @@ getcmd(char *buf, int nbuf)
 void
 proccmd(char* buf)
 {
+  // slide the whitespace
   while (*buf == ' ') {
     buf += 1;
   }
@@ -157,7 +158,7 @@ proccmd(char* buf)
     return;
   }
 
-  // 
+  // run command
   if(fork1() == 0)
     runcmd(parsecmd(buf));
   wait(0);
