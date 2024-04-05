@@ -23,7 +23,6 @@ int getpid(void);
 char* sbrk(int);
 int sleep(int);
 int uptime(void);
-int write_a(char*, char*, int);
 
 // ulib.c
 int stat(const char*, struct stat*);
@@ -41,4 +40,3 @@ void free(void*);
 int atoi(const char*);
 int memcmp(const void *, const void *, uint);
 void *memcpy(void *, const void *, uint);
-int match(char*, char*);
