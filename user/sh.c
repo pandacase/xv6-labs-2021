@@ -141,6 +141,28 @@ getcmd(char *buf, int nbuf)
   return 0;
 }
 
+void
+proccmd(char* buf)
+{
+  while (*buf == ' ') {
+    buf += 1;
+  }
+
+  // Chdir must be called by the parent, not the child.
+  if(buf[0] == 'c' && buf[1] == 'd' && buf[2] == ' ') {
+    if (buf[strlen(buf)-1] == '\n')
+      buf[strlen(buf)-1] = 0;  // chop \n
+    if(chdir(buf+3) < 0)
+      fprintf(2, "cannot cd %s\n", buf+3);
+    return;
+  }
+
+  // 
+  if(fork1() == 0)
+    runcmd(parsecmd(buf));
+  wait(0);
+}
+
 int
 main(void)
 {
@@ -157,16 +179,17 @@ main(void)
 
   // Read and run input commands.
   while(getcmd(buf, sizeof(buf)) >= 0){
-    if(buf[0] == 'c' && buf[1] == 'd' && buf[2] == ' '){
-      // Chdir must be called by the parent, not the child.
-      buf[strlen(buf)-1] = 0;  // chop \n
-      if(chdir(buf+3) < 0)
-        fprintf(2, "cannot cd %s\n", buf+3);
-      continue;
+    char* cmd_buf = buf, *p = buf;
+    while (*p != '\0') {
+      if (*p == ';') {
+        *p = '\0';
+
+        proccmd(cmd_buf);
+        cmd_buf = p + 1;
+      }
+      p += 1;
     }
-    if(fork1() == 0)
-      runcmd(parsecmd(buf));
-    wait(0);
+    proccmd(cmd_buf);
   }
   exit(0);
 }
