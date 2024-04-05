@@ -192,6 +192,6 @@ write_a(char* filePtah, char* buf, int nbuf)
   }
 
   fd = open(filePtah, 1);
-  write(fd, c_buf, sizeof c_buf);
+  write(fd, c_buf, idx_c_buf);
   return idx_buf;
 }
