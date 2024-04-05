@@ -177,3 +177,21 @@ int matchstar(int c, char *re, char *text)
   return 0;
 }
 
+int
+write_a(char* filePtah, char* buf, int nbuf)
+{
+  char c_buf[2048];   // file content buffer
+  int idx_c_buf = 0, idx_buf = 0;
+  int fd;
+
+  fd = open(filePtah, 0);
+  idx_c_buf = read(fd, c_buf, sizeof c_buf);
+
+  while(idx_c_buf < sizeof c_buf && idx_buf < nbuf) {
+    c_buf[idx_c_buf++] = buf[idx_buf++];
+  }
+
+  fd = open(filePtah, 1);
+  write(fd, c_buf, sizeof c_buf);
+  return idx_buf;
+}
