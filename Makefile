@@ -265,14 +265,17 @@ fs.img: mkfs/mkfs README $(UEXTRA) $(UPROGS)
 
 -include kernel/*.d user/*.d
 
-clean: 
-	rm -f *.tex *.dvi *.idx *.aux *.log *.ind *.ilg \
+INTERMEDIATE = \
+	*.tex *.dvi *.idx *.aux *.log *.ind *.ilg \
 	*/*.o */*.d */*.asm */*.sym \
 	$U/initcode $U/initcode.out $K/kernel fs.img \
 	mkfs/mkfs .gdbinit \
         $U/usys.S \
 	$(UPROGS) \
 	ph barrier
+
+clean: 
+	rm -f $(INTERMEDIATE)
 
 # try to generate a unique GDB port
 GDBPORT = $(shell expr `id -u` % 5000 + 25000)
@@ -300,6 +303,7 @@ endif
 
 qemu: $K/kernel fs.img
 	$(QEMU) $(QEMUOPTS)
+	@mv $(INTERMEDIATE) tmp/ 2> /dev/null
 
 .gdbinit: .gdbinit.tmpl-riscv
 	sed "s/:1234/:$(GDBPORT)/" < $^ > $@
