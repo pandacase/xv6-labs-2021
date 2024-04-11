@@ -193,7 +193,7 @@ UPROGS=\
 	$U/_grind\
 	$U/_wc\
 	$U/_zombie\
-
+	$U/_tt\
 
 
 
@@ -303,7 +303,7 @@ endif
 
 qemu: $K/kernel fs.img
 	$(QEMU) $(QEMUOPTS)
-	@mv $(INTERMEDIATE) tmp/ 2> /dev/null
+# @mv $(INTERMEDIATE) tmp/ 2> /dev/null
 
 .gdbinit: .gdbinit.tmpl-riscv
 	sed "s/:1234/:$(GDBPORT)/" < $^ > $@
